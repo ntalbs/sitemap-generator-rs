@@ -1,7 +1,9 @@
-use std::{collections::HashSet, future::Future};
-
+use chrono::Utc;
 use clap::Parser;
 use select::{document::Document, predicate::Name};
+use std::fs::File;
+use std::io::Write;
+use std::{collections::HashSet, future::Future};
 
 #[derive(Debug, Parser)]
 struct Arguments {
@@ -116,9 +118,27 @@ impl SitemapGen {
             }
         }
     }
+
+    fn write_xml(&self) -> std::io::Result<()> {
+        let mut f = File::create("sitemap.xml")?;
+        f.write_all(b"<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n")?;
+        for p in &self.visited_paths {
+            f.write_all(b"  <url>\n")?;
+            f.write_fmt(format_args!("    <loc>{}{}</loc>\n", self.base_uri, p))?;
+            f.write_fmt(format_args!(
+                "    <lastmod>{}</lastmod>\n",
+                Utc::now().to_rfc3339()
+            ))?;
+            f.write_all(b"    <changefreq>monthly</changefreq>\n")?;
+            f.write_all(b"    <priority>0.5</priority\n")?;
+            f.write_all(b"  </url>\n")?;
+        }
+        f.write_all(b"</urlset>")?;
+        Ok(())
+    }
 }
 
-fn main() {
+fn main() -> std::io::Result<()> {
     let args = Arguments::parse();
     let uri = args.uri;
     println!("Target site: {}", uri);
@@ -132,8 +152,6 @@ fn main() {
 
     let mut sitemap_gen = SitemapGen::new(uri, exclude_paths);
     sitemap_gen.collect_paths();
-
-    for (i, p) in sitemap_gen.visited_paths.iter().enumerate() {
-        println!("{:03}:{}", i, p);
-    }
+    sitemap_gen.write_xml()?;
+    Ok(())
 }

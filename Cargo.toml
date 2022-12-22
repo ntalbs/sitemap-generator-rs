@@ -10,6 +10,7 @@ path = "src/main.rs"
 
 [dependencies]
 async-std = "1"
+chrono = "0"
 clap = { version="4", features = ["derive", "env"]}
 surf = "2"
 select = "0"
