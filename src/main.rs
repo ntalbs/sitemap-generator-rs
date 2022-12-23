@@ -103,7 +103,7 @@ impl SitemapGen {
         paths_to_visit_next
     }
 
-    fn collect_paths(&mut self) {
+    fn collect_paths(&mut self) -> &Self {
         let mut paths_to_visit = HashSet::from(["/".to_string()]);
         loop {
             paths_to_visit = self.collect_all_paths(paths_to_visit);
@@ -117,6 +117,7 @@ impl SitemapGen {
                 break;
             }
         }
+        self
     }
 
     fn write_xml(&self) -> std::io::Result<()> {
@@ -150,8 +151,9 @@ fn main() -> std::io::Result<()> {
         exclude_paths = vec![];
     }
 
-    let mut sitemap_gen = SitemapGen::new(uri, exclude_paths);
-    sitemap_gen.collect_paths();
-    sitemap_gen.write_xml()?;
+    SitemapGen::new(uri, exclude_paths)
+        .collect_paths()
+        .write_xml()?;
+
     Ok(())
 }
