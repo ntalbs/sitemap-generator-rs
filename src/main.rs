@@ -131,7 +131,7 @@ impl SitemapGen {
                 Utc::now().to_rfc3339()
             ))?;
             f.write_all(b"    <changefreq>monthly</changefreq>\n")?;
-            f.write_all(b"    <priority>0.5</priority\n")?;
+            f.write_all(b"    <priority>0.5</priority>\n")?;
             f.write_all(b"  </url>\n")?;
         }
         f.write_all(b"</urlset>")?;
