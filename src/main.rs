@@ -92,7 +92,7 @@ impl SitemapGen {
                         paths_to_visit_next.insert(p);
                     }
                 }
-                Err(e) => eprintln!(">>> {:?}", e),
+                Err(e) => eprintln!(">>> {e:?}"),
             }
         }
 
@@ -142,11 +142,11 @@ impl SitemapGen {
 fn main() -> std::io::Result<()> {
     let args = Arguments::parse();
     let uri = args.uri;
-    println!("Target site: {}", uri);
+    println!("Target site: {uri}");
     let exclude_paths;
     if let Some(exclude) = args.exclude {
         exclude_paths = exclude;
-        println!("excludes: {:?}", exclude_paths);
+        println!("excludes: {exclude_paths:?}");
     } else {
         exclude_paths = vec![];
     }
