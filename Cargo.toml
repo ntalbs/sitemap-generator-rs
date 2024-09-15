@@ -2,7 +2,6 @@
 name = "sitemap-generator-rs"
 version = "0.1.0"
 edition = "2021"
-authors = ["ntalb <sntalbsen@gmail.com>"]
 
 [[bin]]
 name = "sitemap-gen"
